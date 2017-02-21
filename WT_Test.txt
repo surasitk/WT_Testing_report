@@ -1,0 +1,218 @@
+*** Settings ***
+Documentation     A resource file with reusable keywords and variables.
+Library           Selenium2Library
+Library           Collections
+Suite Teardown    Close Browser
+
+*** Variables ***
+${BROWSER}                      chrome
+${DELAY}                        0.2
+${Date_L_1}						11.03.17
+${Date_L_2}						11.03.17
+${From}                         Bremen (BRE)
+${To}                           Palma de Mallorca (PMI)
+${Destination_1}				BRE
+${Destination_2}				PMI
+${Flight_No_Leg_1}				ST4570
+${Flight_No_Leg_2}				ST4571
+${Time_1_DEP}					06:00
+${Time_1_ARR}					08:30
+${Time_2_DEP}					09:15
+${Time_2_ARR}					11:55
+${Passenger_title}				Mr.
+${Passenger_FName}				Steve
+${Passenger_LName}				Jobs
+${Seat_Leg_1}					15A
+${Seat_Leg_2}					15A
+${Price_L_1}					10,00
+${Price_L_2}					10,00
+${Totla_price}					20,00
+${Currency}						EUR
+
+
+*** Test Cases ***
+Verify internationalization
+	Open Browser                            https://ecom-gmi.worldticket.net/#/?_k=u0c3uk                                       								${BROWSER}
+	#Maximize Browser Window
+    Set Selenium Speed                      ${DELAY}
+    Wait Until Element Is Visible			id=ddList-js-language__list
+    Title Should Be							Germania (de)
+    Element Should Contain					id=ddList-js-language__list																							Deutsch
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[1]												Buchen
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[2]												Planen
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[3]												Fliegen
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[4]												Reiseführer
+    Page Should Contain						Sitzplatz buchen
+    Click Element							id=ddList-js-language__list
+    Click Element							//*[@id='language-sw']/ul/li[2]/a/label
+    Wait Until Page Contains				Booking
+    Element Should Contain					id=ddList-js-language__list																							English
+    Title Should Be							Germania (en)
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[1]												Booking
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[2]												Planning
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[3]												Flying
+    Element Should Contain					//*[@id='top']/div[1]/div/div/div[2]/div/div/div/div[6]/nav/ul/li[4]												Travel guide
+    Page Should Contain						Book seats
+
+Booking Flow - Flight Search
+    Click Element                           id=airportFromId
+    Wait Until Element Is Visible           //*[@id='norec']/div/div/div/div/div/form/div/div[6]
+    Click Element                           //span[text()='Germany']
+    Click Element                           //span[text()='Bremen (BRE)']
+    Click Element                           id=airportToId
+    Click Element                           id=airportToId
+    Click Element                           //*[@id='norec']/div/div/div/div/div/form/div/div[6]/div[1]/div[2]/ul[1]/li/a/span
+    Click Element                           //span[text()='Palma de Mallorca (PMI)']
+    ${From}=    Get Value                   id=airportFromId
+    Should Be Equal                         ${From}                                                                              								${From} 
+    ${To}=      Get Value                   id=airportToId
+    Should Be Equal                         ${To}                                                                                								${To}
+    Wait Until Element Is Visible          //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[1]
+    ${dis}=                                 Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[5]/div[5]@disabled
+    Log To Console                          \n${dis}
+    Should Be Equal                         ${dis}                      true
+    ${dis_1}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[5]/div[6]@disabled
+    Log To Console                          \n${dis_1}
+    Should Be Equal                         ${dis_1}                      true
+    ${dis_2}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[6]/div[5]@disabled
+    Log To Console                          \n${dis_2}
+    Should Be Equal                         ${dis_2}                      true
+    ${dis_3}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[6]/div[6]@disabled
+    Log To Console                          \n${dis_3}
+    Should Be Equal                         ${dis_3}                      true
+    ${dis_4}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[7]/div[1]@disabled
+    Log To Console                          \n${dis_4}
+    Should Be Equal                         ${dis_4}                      true
+    ${dis_5}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[7]/div[5]@disabled
+    Log To Console                          \n${dis_5}
+    Should Be Equal                         ${dis_5}                      true
+    ${dis_6}=                               Get Element Attribute       //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[7]/div[6]@disabled
+    Log To Console                          \n${dis_6}
+    Should Be Equal                         ${dis_6}                      true
+    Click Button                            Book seats
+    Page Should Contain Element             //*[@id='norec']/div/div/div/div/div/form/div/div[7]
+    Click Element                           //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[1]/div/div/div/div/div/div[2]/div/div[7]/div[6]
+    Element Should Be Visible               //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[1]/div/div/div/div/div/div[2]/div/div[3]/div[6 and contains(concat(' ', @class, ' '), ' react-date-picker__month-view-day--active ')]
+    Click Element                           //*[@id='norec']/div/div/div/div/div/form/div/div[7]/div[2]/div[2]/div/div/div/div[2]/div/div[7]/div[6]
+    ${Date_From_To}=                        Get Value                                                                                                           id=airportFromId
+    Should Be Equal                         ${Date_From_To}                                                                                                     ${Date_From_To}
+    Click Button                            Book seats
+
+Flight Selection page
+    Wait Until Element Is Visible           id=container
+    Element Should Contain                  //*[@id='container']/div/div[1]/div/div/div[2]/span[3]                                                              ${Destination_1}
+    Element Should Contain                  //*[@id='container']/div/div[1]/div/div/div[4]/span[3]                                                              ${Destination_2}
+    Element Should Contain                  //*[@id='container']/div/div[1]/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/table/tbody/tr/td/div                 Sa. 11 Mar
+    Element Should Contain                  //*[@id='container']/div/div[1]/table/tbody/tr[2]/td/div/div/div/div/div/table/tbody/tr[2]/td[2]/div                ${Flight_No_Leg_1}
+    Element Should Contain                  //*[@id='container']/div/div[2]/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/table/tbody/tr/td/div                 Sa. 11 Mar
+    Element Should Contain                  //*[@id='container']/div/div[2]/table/tbody/tr[2]/td/div/div/div/div/div/table/tbody/tr[2]/td[2]/div                ${Flight_No_Leg_2}
+    Focus                                   id=id-ST4570
+    Execute Javascript                      window.document.evaluate("//input[@id='id-ST4570']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[2]                                          ${Date_L_1} 
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[1]/div[1]/span[3]                    ${Destination_1}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[1]/div[3]/span[3]                    ${Destination_2}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[2]/div/span[1]                       ${Time_1_DEP}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[2]/div/span[3]                       ${Time_1_ARR}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[3]/div[2]                            ${Flight_No_Leg_1}
+    Execute Javascript                      window.document.evaluate("//input[@id='id-ST4571']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[2]                                          ${Date_L_2} 
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[1]/span[3]                    ${Destination_2}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[3]/span[3]                    ${Destination_1}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[1]                       ${Time_2_DEP}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[3]                       ${Time_2_ARR}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[3]/div[2]                            ${Flight_No_Leg_2}
+    Click Button                            Next
+
+Passenger Details page
+	Wait Until Element Is Visible			//*[@id='main_flights_wrapper']/div[3]/div/div/div/div/div[1]/div[2]/div/div
+	Select From List						//*[@id='main_flights_wrapper']/div[3]/div/div/div/div/div[1]/div[2]/div/div/div[2]/div/div[1]/div/select			${Passenger_title}
+	Input Text								//*[@id='main_flights_wrapper']/div[3]/div/div/div/div/div[1]/div[2]/div/div/div[2]/div/div[2]/div/input			${Passenger_FName}
+	Input Text								//*[@id='main_flights_wrapper']/div[3]/div/div/div/div/div[1]/div[2]/div/div/div[2]/div/div[3]/div/input			${Passenger_LName}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[2]											${Date_L_1}	
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[1]/div[1]/span[3]					${Destination_1}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[1]/div[3]/span[3]					${Destination_2}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[2]/div/span[1]						${Time_1_DEP}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[2]/div/span[3]						${Time_1_ARR}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[3]/div[2]							${Flight_No_Leg_1}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[4]/div[3]/span[1]					${Passenger_title}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[4]/div[3]/span[3]					${Passenger_FName}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[2]/div/div[3]/div[4]/div[3]/span[5]					${Passenger_LName}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[2]											${Date_L_2}	
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[1]/span[3]					${Destination_2}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[3]/span[3]					${Destination_1}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[1]						${Time_2_DEP}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[3]						${Time_2_ARR}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[3]/div[2]							${Flight_No_Leg_2}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[1]					${Passenger_title}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[3]					${Passenger_FName}
+	Element Text Should Be					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[5]					${Passenger_LName}
+	Click Button							Next
+
+Seat Selection Page
+    Wait Until Element Is Visible           id=seatmap_container_from
+    Click Element                           //*[@id='seatmap_container_fromSEAT_${Seat_Leg_1}']/a
+    Element Should Be Visible               //*[@id='seatmap_container_fromSEAT_${Seat_Leg_1}' and contains(concat(' ', @class, ' '), ' SELECTED ')]
+    Sleep                                   2.0
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[3]/div[1]/table/tbody/tr/td[2]                                                  ${Seat_Leg_1}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[4]                            ${Seat_Leg_1}
+    Click Element                           //*[@id='seatmap_container_toSEAT_${Seat_Leg_2}']/a
+    Element Should Be Visible               //*[@id='seatmap_container_toSEAT_${Seat_Leg_2}' and contains(concat(' ', @class, ' '), ' SELECTED ')]
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[3]/div[2]/table/tbody/tr/td[2]                                                  ${Seat_Leg_2}
+    Element Should Contain                  //*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[4]/div[4]                            ${Seat_Leg_2}
+    Click Button                            Next
+
+Booking Details Page Leg 1
+	Wait Until Element Is Visible			 id=main_flights_wrapper
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[1]															${Date_L_1}	
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[2]/span[1]/div[2]/span[3]										${Destination_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[2]/span[1]/div[4]/span[3]										${Destination_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[2]/span[2]													${Flight_No_Leg_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[1]/span/span[1]										${Passenger_title}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[1]/span/span[3]										${Passenger_FName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[1]/span/span[5]										${Passenger_LName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[3]/span[3]												${Seat_Leg_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[4]/span[1]												${Price_L_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[1]/div/div[5]/div[4]/span[3]												${Currency}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[2]											${Date_L_1}	
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[1]/span[3]					${Destination_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[1]/div[3]/span[3]					${Destination_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[1]						${Time_1_DEP}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[2]/div/span[3]						${Time_1_ARR}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[3]/div[2]							${Flight_No_Leg_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[1]					${Passenger_title}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[3]					${Passenger_FName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[3]/span[5]					${Passenger_LName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[3]/div/div[3]/div[4]/div[4]							${Seat_Leg_1}
+
+Booking Details Page Leg 2	
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[1]															${Date_L_2}	
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[2]/span[1]/div[2]/span[3]										${Destination_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[2]/span[1]/div[4]/span[3]										${Destination_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[2]/span[2]													${Flight_No_Leg_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[1]/span/span[1]										${Passenger_title}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[1]/span/span[3]										${Passenger_FName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[1]/span/span[5]										${Passenger_LName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[3]/span[3]												${Seat_Leg_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[4]/span[1]												${Price_L_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[2]/div/div[5]/div[4]/span[3]												${Currency}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[2]											${Date_L_2}	
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[1]/div[1]/span[3]					${Destination_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[1]/div[3]/span[3]					${Destination_1}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[2]/div/span[1]						${Time_2_DEP}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[2]/div/span[3]						${Time_2_ARR}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[3]/div[2]							${Flight_No_Leg_2}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[4]/div[3]/span[1]					${Passenger_title}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[4]/div[3]/span[3]					${Passenger_FName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[4]/div[3]/span[5]					${Passenger_LName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[4]/div/div[3]/div[4]/div[4]							${Seat_Leg_2}
+
+Booking Details Total Price
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[3]/div[3]/div[2]/div[2]/span[1]													${Totla_price}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[5]/div[2]/div[1]/span[3]								${Passenger_title}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[5]/div[2]/div[1]/span[5]								${Passenger_FName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[5]/div[2]/div[1]/span[7]								${Passenger_LName}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[5]/div[2]/div[2]										${Totla_price}
+	Element Should Contain					//*[@id='main_flights_wrapper']/div[2]/div/ul/li/div/div/div[5]/div[3]/div[2]										${Totla_price}
+	Click Button							Payment
+	Wait Until Element Is Visible			id=opc-billing
+
